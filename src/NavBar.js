@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Button, Flex, Link, Image, Spacer } from '@chakra-ui/react';
-import Discord from './assets/social-media-icons/email_32x32.png';
 import Twitter from './assets/social-media-icons/Twitter.png';
 import Opensea from './assets/social-media-icons/Opensea.png';
 
