@@ -8,6 +8,7 @@ const ShapeshifterAddress = "0xdBC5Fc4F321eEDF6644520aa0898C4d9e524315D";
 
 const MainMint = ({ accounts, setAccounts }) => {
     const [tokenId, setTokenId] = useState(1);
+    const [supply, setSupply] = useState(handleSupply().response);
     const isConnected = Boolean(accounts[0]);
 
     async function handleMint() {
@@ -23,6 +24,7 @@ const MainMint = ({ accounts, setAccounts }) => {
                 const response = await contract.mint( {
                     value: ethers.utils.parseEther((0 * 1).toString()),
                 });
+                handleSupply();
                 console.log('response: ', response);
             } catch (err) {
                 console.log("error: ", err);
@@ -66,21 +68,89 @@ const MainMint = ({ accounts, setAccounts }) => {
         }
     }
 
+    async function handleSupply() {
+        if (window.ethereum) {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            const contract = new ethers.Contract(
+                ShapeshifterAddress,
+                Shapeshifters.abi,
+                signer
+            );
+            try {
+                const response = await contract.poolSupply();
+                setSupply(response.toString());
+                console.log('response: ', response);
+            } catch (err) {
+                console.log("error: ", err);
+            }
+        }
+    }
+
     const handleChange = (event) => setTokenId(event.target.value)
 
     return (
         <Flex justify="center" align="center" height="100vh" padding="150px">
             <Box width="520px">
                 <div>
-                    <Text fontSize="48px" textAlign="center" textShadow="0 5px #000000">Shape Shifters</Text>
+                    <Text fontSize="33px" textAlign="center" textShadow="0 5px #000000">Shape Shifters</Text>
+                </div>
+                <div>
+                    <Flex align="center" justify="center">
+                        <Button 
+                            backgroundColor="#D6517D"
+                            borderRadius="5px"
+                            boxShadow="0px 2px 2px 1px #0F0F0F"
+                            color ="white"
+                            cursor="pointer"
+                            fontFamily="inherit"
+                            padding="15px"
+                            marginTop="0px"
+                            onClick={handleMint}
+                        >
+                            MINT
+                        </Button>
+                    </Flex>
                     <Text
-                        fontSize="24px"
-                        letterSpacing="-5.5%"
-                        fontFamily="VT323"
-                        textShadow="0 2px 2px #000000"
+                                fontSize="24px"
+                                letterSpacing="-5.5%"
+                                fontFamily="VT323"
+                                textShadow="0 2px 2px #000000"
                     >
-                        Enter TokenID:
+                                Total Minted: 6969/10000
                     </Text>
+
+                </div>
+                <div>
+                    <Text fontSize="24px" textAlign="center" textShadow="0 5px #000000">Pool</Text>
+                </div>
+                <div>
+                    <Flex align="center" justify="center">
+                        <Box 
+                            backgroundColor="#D6517D"
+                            borderRadius="5px"
+                            boxShadow="0px 2px 2px 1px #0F0F0F"
+                            color="white"
+                            fontFamily="inherit"
+                            padding="15px"
+                            margin="0 5px"
+                        >
+                            TokenID:
+                        </Box>
+                        <Input
+                            fontFamily="inherit"
+                            width="100px"
+                            height="40px"
+                            textAlign="center"
+                            paddingLeft="19px"
+                            marginTop="0px"
+                            min="1"
+                            max="10000"
+                            type="number"
+                            value={tokenId}
+                            onChange={handleChange}
+                        />
+                    </Flex>
                 </div>
                 {isConnected ? (
                     <div>
@@ -98,17 +168,6 @@ const MainMint = ({ accounts, setAccounts }) => {
                             >
                                 Liqudate
                             </Button>
-                            <Input
-                                fontFamily="inherit"
-                                width="100px"
-                                height="40px"
-                                textAlign="center"
-                                paddingLeft="19px"
-                                marginTop="10px"
-                                type="number"
-                                value={tokenId}
-                                onChange={handleChange}
-                            />
                             <Button 
                                 backgroundColor="#D6517D"
                                 borderRadius="5px"
@@ -123,19 +182,14 @@ const MainMint = ({ accounts, setAccounts }) => {
                                 Resurrect
                             </Button>
                         </Flex>
-                        <Button 
-                                backgroundColor="#D6517D"
-                                borderRadius="5px"
-                                boxShadow="0px 2px 2px 1px #0F0F0F"
-                                color ="white"
-                                cursor="pointer"
-                                fontFamily="inherit"
-                                padding="15px"
-                                marginTop="10px"
-                                onClick={handleMint}
+                            <Text
+                                fontSize="24px"
+                                letterSpacing="-5.5%"
+                                fontFamily="VT323"
+                                textShadow="0 2px 2px #000000"
                             >
-                                MINT
-                            </Button>
+                                ShapeShifters In Pool: {supply}/10000
+                            </Text>
                     </div>
                 ) : (
                     <Text
