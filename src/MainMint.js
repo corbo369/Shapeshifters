@@ -74,12 +74,12 @@ const MainMint = ({ accounts, setAccounts }) => {
                 <div>
                     <Text fontSize="48px" textAlign="center" textShadow="0 5px #000000">Shape Shifters</Text>
                     <Text
-                        fontSize="30px"
+                        fontSize="24px"
                         letterSpacing="-5.5%"
                         fontFamily="VT323"
                         textShadow="0 2px 2px #000000"
                     >
-                        Mint Below
+                        Enter TokenID:
                     </Text>
                 </div>
                 {isConnected ? (
